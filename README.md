@@ -1,0 +1,9 @@
+https://github.com/masonschmidt/PCI-Efficiency-Project
+
+##### What Our Project Is
+
+Our project generates example data for up to 3000 generators and pushes the data to a REST endpoint as a JSON file that is received by a consumer. The generators model real-world generators, such as coal or nuclear plants, that output the amount of fuel they use and the amount of power they produce every 5-10 seconds. The JSON files also include information about which generator produced the data and when it was produced. The consumer aggregates the data it receives over a minute, and uses it to calculate the efficiency. The consumer then stores all of the data in DynamoDB, and a web client allows the user to pull data and graph it over time. The generators, consumer, and web app are all independent modular systems that work together to create, store, and display data.
+
+##### How It Works
+
+The consumer uses asyncio and aiohttp to asynchronously receive the data. We decided to use aiohttp over pyCurl because aiohttp performs better with asynchronous requests, which is how our generator sends data. For data storage, we previously used Amazon S3 instead of Dynamo, but we found that Dynamo's options for storing data were much cheaper than S3's for our needs. The tables in Dynamo are set up to store three sets of data: the power, the fuel, and the efficiency. This allows us to select which dataset we want to handle, and is also useful for auditing purposes. The web client was created using React, and allows for multiple generators to be graphed at once. The client pulls data from Dynamo in real-time, meaning that the graphs are always up-to-date. It also gives the user the ability to select the time range of data to display, allowing you the change the beginning and ending time of data.
